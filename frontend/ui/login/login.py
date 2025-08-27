@@ -5,6 +5,7 @@ PyQt6 Login UI (Wide Rectangular Card with Logo + Header Text)
 import sys
 import re
 import requests
+from pathlib import Path
 from PyQt6.QtCore import Qt, QSize, pyqtSignal
 from PyQt6.QtGui import QPalette, QColor, QFont, QPixmap
 from PyQt6.QtWidgets import (
@@ -27,6 +28,10 @@ START_WIDTH = 1200
 START_HEIGHT = 1080
 MIN_WIDTH = 800
 MIN_HEIGHT = 800
+
+# Directory Helper
+BASE_DIR = Path(__file__).resolve().parents[2]  # project root
+ASSETS_DIR = BASE_DIR /  "assets" / "images"
 
 
 class LoginWidget(QWidget):
@@ -51,7 +56,7 @@ class LoginWidget(QWidget):
         left_layout.addItem(QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
 
         self.left_logo = QLabel()
-        self.left_logo.setPixmap(QPixmap("images/cisc.png").scaled(220, 220,Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        self.left_logo.setPixmap(QPixmap(str(ASSETS_DIR/"cisc_logo.jpg")).scaled(220, 220,Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         self.left_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
         left_layout.addWidget(self.left_logo)
 
@@ -88,7 +93,7 @@ class LoginWidget(QWidget):
 
         # Logo placeholder
         self.uni_logo = QLabel()
-        self.uni_logo.setPixmap(QPixmap("images/cmu.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio,
+        self.uni_logo.setPixmap(QPixmap(str(ASSETS_DIR/"cmu_cisc_logo.jpg")).scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio,
                                                           Qt.TransformationMode.SmoothTransformation))
         self.uni_logo.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         header_layout.addWidget(self.uni_logo)
