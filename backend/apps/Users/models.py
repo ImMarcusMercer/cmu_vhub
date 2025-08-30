@@ -2,7 +2,7 @@ from django.db import models
 
 # # Create your models here.
 
-# # User model based on the DB structure
+# User model based on the DB structure
 class User(models.Model):
     """Should contain all necessary fields to accomodate User functionality"""
     user_id=models.IntegerField()
@@ -12,10 +12,8 @@ class User(models.Model):
     last_name=models.CharField(max_length=50)
     hash_password=models.CharField(max_length=255)
     email=models.CharField(max_length=50)
-
     # Need confirmation on what to use, for now use (supabase/image/UID/profile_image). Not real, sample only
     profile_picture=models.CharField(max_length=50)
-
     status=models.PositiveSmallIntegerField()
     creation_date=models.DateTimeField()
     birth_date=models.DateTimeField()

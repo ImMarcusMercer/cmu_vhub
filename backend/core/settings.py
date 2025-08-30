@@ -45,8 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # TODO: Add your apps here
-    'apps.Users.apps.UsersConfig',
     'apps.Users.users_api.urls',
+    # 'apps.Users.apps.',
 ]
 
 MIDDLEWARE = [
