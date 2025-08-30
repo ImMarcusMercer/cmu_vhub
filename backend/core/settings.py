@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+# from dotenv import load_dotenv
+# load_dotenv() 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # TODO: Add your apps here
+    'apps.Users.apps.UsersConfig',
+    'apps.Users.users_api.urls',
 ]
 
 MIDDLEWARE = [
@@ -78,9 +83,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.getenv("PG_HOST", "127.0.0.1"),
+        "PORT": os.getenv("PG_PORT", "5432"),
+        "USER": os.getenv("PG_USER", "vhub"),
+        "PASSWORD": os.getenv("PG_PASSWORD", "password123"),
+        "NAME": os.getenv("PG_DB", "cmu_db"),
     }
 }
 

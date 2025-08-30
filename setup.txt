@@ -1,0 +1,16 @@
+start virtual environment
+
+If security error occurs, input this command, then try staring env again
+# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+
+install dependencies
+pip install -r requirements.txt
+
+run server
+# cd backend
+# python manage.py runserver
+
+open new shell
+run this command
+# python .\frontend\main.py

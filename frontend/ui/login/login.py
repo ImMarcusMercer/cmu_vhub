@@ -3,6 +3,8 @@ PyQt6 Login UI (Wide Rectangular Card with Logo + Header Text)
 Wired to backend/User AuthService (PostgreSQL + bcrypt)
 """
 from frontend.ui.login.Dashboard import Dashboard
+from frontend.ui.login.resetpassword import ResetPasswordWidget
+
 
 from pathlib import Path
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -166,6 +168,9 @@ class LoginWidget(QWidget):
 
     def open_reset_password_window(self, event):
         self.forgot_password_requested.emit()
+        self.forgot_password=ResetPasswordWidget()
+        self.forgot_password.show()
+        self.close()
 
     def validate_login(self):
         self.email_error_label.hide()
