@@ -5,7 +5,7 @@ class AuthService:
     def __init__(self):
         # should point to core-urls, then core-urls to api-urls.py, then api-urls.py to user_api.py then handle login logic
         # self.base_url = 'http://localhost:8000/api/users/login/api/'
-        self.base_url = "http://127.0.0.1:8000/api/users/login/api/"
+        self.base_url = "http://127.0.0.1:8000/apps/Users/users/login/api/"
 
     def login(self, username, password):
         """Authenticate user by sending a POST request to the Django backend."""

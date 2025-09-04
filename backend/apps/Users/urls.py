@@ -1,6 +1,6 @@
 # backend/api/urls.py
 from django.urls import path
-from ...api.user_api import UserLoginAPIView
+from .views import UserLoginAPIView
 
 urlpatterns = [
     # Points to UserLoginAPI, to handle authentication
