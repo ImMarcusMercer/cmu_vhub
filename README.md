@@ -33,7 +33,7 @@ CISC V-Hub is a desktop application acting as an academic organizer, communicati
 	Developed using PyQt6, the desktop frontend interacts with the backend via APIs and provides a rich user interface. Qt Designer is used for GUI layouts.
 - **Database**:  
 	PostgreSQL is the main production database for scalability and robustness. SQLite3 is used for local development and testing.
-- **Virtual Environment (`myenv/`)**:  
+- **Virtual Environment (`venv/`)**:  
 	All dependencies are managed in a Python virtual environment for consistency and isolation.
 
 ### Key Backend Folders
@@ -81,9 +81,13 @@ V-Hub includes modules for:
 
 1. Clone the repository.
 2. Create and activate a Python virtual environment.
+	If Policy related error occurs:
+		Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 3. Install dependencies:  
 	 `pip install -r requirements.txt`
 4. Run migrations:  
 	 `python backend/manage.py migrate`
 5. Start the server:  
 	 `python backend/manage.py runserver`
+6. Start at Login through frontent/main.py
+	 `python .\frontend\main.py`

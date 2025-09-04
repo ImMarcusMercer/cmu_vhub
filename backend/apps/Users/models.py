@@ -1,96 +1,69 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# # Create your models here.
+# Create your models here.
 
-# User model based on the DB structure
-class User(models.Model):
-    """Should contain all necessary fields to accomodate User functionality"""
-    user_id=models.IntegerField()
-    role_id=models.IntegerField()
-    first_name=models.CharField(max_length=50)
-    middle_name=models.CharField(max_length=50)
-    last_name=models.CharField(max_length=50)
-    hash_password=models.CharField(max_length=255)
-    email=models.CharField(max_length=50)
-    # Need confirmation on what to use, for now use (supabase/image/UID/profile_image). Not real, sample only
-    profile_picture=models.CharField(max_length=50)
-    status=models.PositiveSmallIntegerField()
-    creation_date=models.DateTimeField()
-    birth_date=models.DateTimeField()
-    institutional_id=models.IntegerField()
-    phone_number=models.IntegerField()
-    program=models.CharField(max_length=50)
-    section_id=models.IntegerField()
-    is_staff=models.BooleanField()
-    is_active=models.BooleanField()
-    is_superuser=models.BooleanField()
-    last_login=models.DateTimeField()
-    date_joined=models.DateTimeField()
+class FacultyDepartment(models.Model):
+    department_name = models.CharField(max_length=50)
 
-# # users/models.py
-# from django.contrib.auth.models import AbstractUser
-# from django.db import models
-# from django.utils import timezone
 
-# class User(AbstractUser):
-#     # Replaces Django’s default AutoField PK with your explicit user_id if needed
-#     # user_id = models.AutoField(primary_key=True)
+class Position(models.Model):
+    position_name = models.CharField(max_length=50)
 
-#     # Additional fields from your DBD
-#     middle_name = models.CharField(max_length=50, blank=True)
-#     profile_picture = models.URLField(blank=True)  # Supabase/public link
-#     status = models.PositiveSmallIntegerField(default=1)  # map to enum
-#     creation_date = models.DateTimeField(auto_now_add=True)
-#     birth_date = models.DateField(null=True, blank=True)
-#     institutional_id = models.CharField(max_length=50, blank=True, unique=True)
-#     phone_number = models.CharField(max_length=20, blank=True)
-#     program = models.CharField(max_length=50, blank=True)
 
-#     # Foreign keys from other tables (Roles, section)
-#     section = models.ForeignKey("Section", on_delete=models.SET_NULL, null=True, blank=True)
-#     role = models.ForeignKey("Role", on_delete=models.SET_NULL, null=True, blank=True)
+class Program(models.Model):
+    program_id = models.AutoField(primary_key=True)
+    program_name= models.CharField(max_length=255)
 
-#     # Already provided by AbstractUser:
-#     # first_name, last_name, email, password, is_staff, is_active, is_superuser, last_login, date_joined
+class Section(models.Model):
+    section_name = models.CharField(max_length=10)
 
-#     def __str__(self):
-#         return f"{self.first_name} {self.last_name}".strip()
+class Profile(models.Model):
+    # profile_id = models.AutoField(primary_key=True)
+    # user_id = models.ForeignKey(User.pk)
+    # middle_name = models.CharField(max_length=20)
+    # suffix = models.CharField(auto_created=None)
+    # profile_picture = models.CharField()
+    # birth_date = models.DateField()
+    # institutional_id = models.CharField(max_length=20)
+    # phone_number = models.CharField(max_length=11)
+    # role_type = None
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    middle_name = models.CharField(max_length=50, blank=True, null=True)
+    suffix = models.CharField(max_length=5, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to="profile_pics/", blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
+    institutional_id = models.CharField(max_length=20, unique=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
 
-# class Role(models.Model):
-#     role_name = models.CharField(max_length=50, unique=True)
-#     access_level = models.PositiveSmallIntegerField()
+    ROLE_CHOICES = [
+        ("admin", "Admin"),
+        ("student", "Student"),
+        ("faculty", "Faculty"),
+        ("staff", "Staff"),
+    ]
+    role_type = models.CharField(max_length=20, choices=ROLE_CHOICES)
 
-#     def __str__(self):
-#         return self.role_name
+class Admin(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="admin")
 
-# class Section(models.Model):
-#     section_name = models.CharField(max_length=10)
+class Faculty(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="faculty")
+    faculty_department = models.ForeignKey(FacultyDepartment, on_delete=models.SET_NULL, null=True)
+    position = models.ForeignKey(Position, on_delete=models.SET_NULL, null=True)
+    hire_date = models.DateField(null=True, blank=True)
 
-#     def __str__(self):
-#         return self.section_name
 
-# class Resume(models.Model):
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-#     filepath = models.CharField(max_length=255)
+class Student(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="student")
+    program = models.ForeignKey("Program", on_delete=models.SET_NULL, null=True)
+    indiv_points = models.IntegerField(default=0)
+    year_level = models.IntegerField()
 
-#     def __str__(self):
-#         return f"{self.user.username} resume"
 
-# from dataclasses import dataclass
-# from typing import Sequence
+class Staff(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="staff")
+    faculty_department = models.ForeignKey(FacultyDepartment, on_delete=models.SET_NULL, null=True)
+    job_title = models.CharField(max_length=50)
 
-# @dataclass
-# class UserRow:
-#     id: int
-#     username: str
-#     password_hash: str
-#     status: str
 
-# @dataclass
-# class AuthResult:
-#     ok: bool
-#     error: str | None = None
-#     user_id: int | None = None
-#     username: str | None = None
-#     roles: Sequence[str] = ()
-#     token: str | None = None 

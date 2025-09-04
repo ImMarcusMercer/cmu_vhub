@@ -1,5 +1,5 @@
 """
-CISC Virtual Hub – Main entry point
+CISC Virtual Hub Main entry point
 login → reset → profile via QStackedWidget
 """
 
@@ -13,7 +13,7 @@ from PyQt6.QtCore import QSize
 
 import login
 import resetpassword
-import user_profile          # must expose ProfileWidget
+import user_profile
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 

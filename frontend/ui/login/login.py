@@ -2,8 +2,8 @@
 PyQt6 Login UI (Wide Rectangular Card with Logo + Header Text)
 Wired to backend/User AuthService (PostgreSQL + bcrypt)
 """
-from frontend.ui.login.Dashboard import Dashboard
-from frontend.ui.login.resetpassword import ResetPasswordWidget
+from .Dashboard import Dashboard
+from .resetpassword import ResetPasswordWidget
 
 
 from pathlib import Path
@@ -15,7 +15,8 @@ from PyQt6.QtWidgets import (
     QGraphicsDropShadowEffect, QMessageBox
 )
 
-from backend.apps.Users.service import AuthService 
+
+from services.auth_service import AuthService
 
 # --- Paths ---
 BASE_DIR = Path(__file__).resolve().parents[2] 
@@ -23,11 +24,11 @@ ASSETS_DIR = BASE_DIR / "assets" / "images"
 
 class LoginWidget(QWidget):
     forgot_password_requested = pyqtSignal()
-    login_successful = pyqtSignal(str)  # emits username (or email) on success
+    login_successful = pyqtSignal(object)  # Emits username (or email) on success
 
-    def __init__(self, auth_service: AuthService, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self.auth_service = auth_service
+        self.auth_service = AuthService() 
 
         pal = self.palette()
         pal.setColor(QPalette.ColorRole.Window, QColor("#f8f9fa"))
@@ -168,9 +169,17 @@ class LoginWidget(QWidget):
 
     def open_reset_password_window(self, event):
         self.forgot_password_requested.emit()
-        self.forgot_password=ResetPasswordWidget()
+        self.forgot_password = ResetPasswordWidget()
         self.forgot_password.show()
         self.close()
+    
+    # def closeEvent(self, event):
+    #     if QMessageBox.question(self, "Exit", "Are you sure you want to exit?",
+    #                             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+    #                             QMessageBox.StandardButton.No) == QMessageBox.StandardButton.Yes:
+    #         event.accept()
+    #     else:
+    #         event.ignore()
 
     def validate_login(self):
         self.email_error_label.hide()
@@ -183,28 +192,24 @@ class LoginWidget(QWidget):
             self.password_error_label.setText("Both fields are required.")
             self.password_error_label.show()
             return
+
         try:
             result = self.auth_service.login(username, password)
-        except Exception as e:
+        except Exception:
             self.password_error_label.setText("Authentication error. Check DB connection.")
             self.password_error_label.show()
             return
-        
 
         if not result.ok:
             self.password_error_label.setText(result.error or "Incorrect username or password.")
             self.password_error_label.show()
             return
 
-        # Success, dialog box for now, change to redirect to dahsboard kater
-        # self.login_successful.emit(result.username or username)
-        # QMessageBox.information(self, "Welcome", f"Hello, {result.username or username}!")
+        # SUCCESS — emit the full result for other components to use
+        self.login_successful.emit(result)
+        # Let MainWindow decide when to close this
+        # self.close()
+    
 
-        # open dashboard instead of dialog
-        self.login_successful.emit(result.username or username)
-
-        self.dashboard = Dashboard(result.username or username)
-        self.dashboard.show()
-        self.close()
 
 
