@@ -18,7 +18,6 @@ class MainWindow(QMainWindow):
         self.login_widget.login_successful.connect(self.open_dashboard)
 
     def open_dashboard(self, result):
-        # result is LoginResult with username, roles, primary_role, token
         print(f"Login OK for {result.username} | roles={result.roles} | primary={result.primary_role}")
 
         self.dashboard = Dashboard(
