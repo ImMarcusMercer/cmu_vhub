@@ -4,7 +4,7 @@ from .models import *
 class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Profile
+        model = BaseUser
         fields = '__all__'
 
     

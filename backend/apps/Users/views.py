@@ -67,7 +67,7 @@ class UserLoginAPIView(APIView):
             'message': 'Login successful',
             'access_token': str(refresh.access_token),
             'roles': roles,
-            # 'primary_role': primary_role,
+            'primary_role': primary_role,
             'username': user.username,
         }, status=status.HTTP_200_OK)
 
